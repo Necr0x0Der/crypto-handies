@@ -1,1 +1,1 @@
-from .wallets_oc import Mnemorator
+from .wallets_oc import *
