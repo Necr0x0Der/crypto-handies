@@ -20,6 +20,11 @@
 #SOFTWARE.
 
 from mnemonic import Mnemonic
+from random import shuffle, randint
+
+def _to_word_list(words):
+    return words.split(' ') if isinstance(words, str) else words
+
 
 class Mnemorator:
     '''
@@ -94,10 +99,41 @@ class Mnemorator:
         there can be too many valid alternatives, so
         additional filtering can be needed in this case
         '''
-        if isinstance(words, str):
-            words = words.split(' ')
+        words = _to_word_list(words)
         for mnem in self._fill_rec('', words):
             yield mnem
             if max_count == 0:
                 break
             max_count -= 1
+
+    def shuffle_words(self, words, phrase_length=12, max_out=20, max_shuffle=1000):
+        '''
+        Try to find valid mnemonic by shuffling words from the provided list.
+        Can be useful if you don't remember the order in your mnemonic phrase,
+        or just want to generate a phrase made up of specific words.
+
+        The number of words can be 
+        - equal to phrase_length - exactly these words will appear in all phrases
+        - greater than phrase_length - different words but only from this list
+          will be in all phrases
+        - lesser than phrase_length - missing words will be found by fill_words;
+          however, if more than one word is missing, all (except last) missing
+          words will be taken from the beginning of the alphabet
+        '''
+        words = _to_word_list(words)
+        cnt_fill = phrase_length - len(words)
+        if cnt_fill > 0:
+            words += '?' * cnt_fill
+        for _ in range(max_shuffle):
+            if max_out == 0:
+                break
+            # It is ok to call fill_words without ? - it will return
+            # input words if they constitute correct mnemonic phrase,
+            # otherwise it will return nothing
+            _words = words.copy()
+            shuffle(_words)
+            phrases = self.fill_words(_words[:phrase_length])
+            phrases = [] if phrases is None else list(phrases)
+            if len(phrases) > 0:
+                yield phrases[randint(0, len(phrases)-1)]
+                max_out -= 1

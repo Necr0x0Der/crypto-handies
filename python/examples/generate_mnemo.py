@@ -17,6 +17,14 @@ for (w, c) in m.gen_prefer(
 print("\n========== Generating mnemonics by filling in missed words ==========")
 words = m.mnemo.wordlist[:12]
 words[-2] = '?'
-print(f"Initial pattern: {words}")
+print(f"Pattern: {' '.join(words)}")
 for r in m.fill_words(words, max_count=20):
     print(r)
+
+print("\n========== Generating mnemonics by shuffling given words ==========")
+print(">>> Shuffling 12 words - the same words will be in all phrases <<<")
+print('\n'.join(m.shuffle_words(m.mnemo.wordlist[:12], max_out=3)))
+print(">>> Shuffling 15 words - only they will be in all phrases <<<")
+print('\n'.join(m.shuffle_words(m.mnemo.wordlist[:15], max_out=3)))
+print(">>> Shuffling 11 words - one word will be randomly inserted <<<")
+print('\n'.join(m.shuffle_words(m.mnemo.wordlist[:11], max_out=3)))
