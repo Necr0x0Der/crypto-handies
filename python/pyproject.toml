@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "crypto_handies"
+version = "0.1.0"
+description = ""
+authors = ["Necr0x0Der <user@placeholder.com>"]
+license = "MIT"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+mnemonic = "^0.21"
