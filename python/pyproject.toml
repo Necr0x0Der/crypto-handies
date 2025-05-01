@@ -12,3 +12,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.dependencies]
 python = "^3.8"
 mnemonic = "^0.21"
+ecdsa = "^0.19"
+eth_utils = "^5.1"
+hdwallet = { version = "^3.4", optional = true }
