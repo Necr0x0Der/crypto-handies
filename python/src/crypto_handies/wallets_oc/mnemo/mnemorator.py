@@ -56,3 +56,48 @@ class Mnemorator:
                     cnt += 2
             if cnt > min_count:
                 yield (words, cnt)
+
+    def _fill_rec(self, words, ws):
+        if len(ws) == 0:
+            if self.mnemo.check(words):
+                yield words
+            return
+        if ws[0] != '?':
+            if len(words) == 0:
+                yield from self._fill_rec(ws[0], ws[1:])
+            else:
+                yield from self._fill_rec(words + ' ' + ws[0], ws[1:])
+            return
+        for w in self.mnemo.wordlist:
+            if len(words) == 0:
+                yield from self._fill_rec(w, ws[1:])
+            else:
+                yield from self._fill_rec(words + ' ' + w, ws[1:])
+
+    def fill_words(self, words, max_count=200):
+        '''
+        Accept a seed phrase with some words replaced with ?
+        and systematically enumerate possible substitutions
+        for '?'s from Mnemonic.wordlist checking if the mnemonic
+        is correct. Yield all the result up to max_count.
+
+        max_count=-1 will generate all possibilities
+
+        It can useful for different scenarios:
+        - You remember the phrase, but not precisely, so
+          you replace the words you are not sure in with ?
+        - You wrote a poetic mnemonic phrase, but it is
+          invalid, so you replace one word with ? and
+          choose the most suitable correct phrase
+        
+        More than one word can be replaced with ?, but
+        there can be too many valid alternatives, so
+        additional filtering can be needed in this case
+        '''
+        if isinstance(words, str):
+            words = words.split(' ')
+        for mnem in self._fill_rec('', words):
+            yield mnem
+            if max_count == 0:
+                break
+            max_count -= 1
