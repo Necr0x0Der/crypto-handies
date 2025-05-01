@@ -35,7 +35,7 @@ class Mnemorator:
         Generate random mnemonic phrases and count the number of
         preferred words in them (words_top are taken with weight 2).
         
-        This is quite a stupid strategy, but it can be a good start to
+        This is quite a simple strategy, but it can be a good start to
         explore various mnemonics.
 
         There can be too many or too few accepted results, which can be
