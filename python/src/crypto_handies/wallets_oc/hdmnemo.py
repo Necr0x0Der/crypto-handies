@@ -50,10 +50,11 @@ class HDMnemo:
     From compact code, it's also easier to see that your mnemonics
     are not sent anywhere.
     '''
-    def __init__(self, private_key):
+    def __init__(self, private_key, mnemo=None):
         assert len(private_key) == 32, "Private key length should be 32"
         self._private_key = private_key
         self._point = int.from_bytes(private_key, byteorder='big') * BIP32_CURVE.generator
+        self._mnemo = mnemo
 
     @classmethod
     def from_mnemonic(cls, words, deriv_path=DerivationPath.Eth(), passphrase=""):
@@ -66,10 +67,10 @@ class HDMnemo:
         # bip39 seed -> bip32 master node
         seed_hash = hmac.new(BIP32_SEED_MODIFIER, seed, hashlib.sha512).digest()
         chain_code = seed_hash[32:]
-        wallet = cls(private_key=seed_hash[:32])
+        wallet = cls(private_key=seed_hash[:32], mnemo=words)
         for piece in deriv_path:
             child_key, chain_code = wallet._derive_childkey(chain_code, piece)
-            wallet = cls(child_key)
+            wallet = cls(child_key, mnemo=words)
         return wallet
 
     def _derive_childkey(self, parent_chain_code, i):
@@ -109,3 +110,5 @@ class HDMnemo:
     def public_key(self):
         return binascii.hexlify(bytes(self)).decode("utf-8")
 
+    def mnemonic(self):
+        return self._mnemo
