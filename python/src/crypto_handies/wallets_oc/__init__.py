@@ -1,2 +1,3 @@
-from .mnemo.mnemorator import Mnemorator
-from .mnemo.hdmnemo import HDMnemo
+from .mnemorator import Mnemorator
+from .hdmnemo import HDMnemo
+from .hdstorage import HDKeyRing
