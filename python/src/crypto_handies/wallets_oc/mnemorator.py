@@ -137,3 +137,10 @@ class Mnemorator:
             if len(phrases) > 0:
                 yield phrases[randint(0, len(phrases)-1)]
                 max_out -= 1
+
+    def random_from_words(self, words, phrase_length=12):
+        '''
+        A simple wrapper to get one correct mnemonic from the list of words
+        to generate the wallet
+        '''
+        return list(self.shuffle_words(words, phrase_length, max_out=1))[0]
