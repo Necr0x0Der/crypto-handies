@@ -112,3 +112,12 @@ class HDMnemo:
 
     def mnemonic(self):
         return self._mnemo
+
+    def __repr__(self):
+        lines = []
+        if self._mnemo is not None:
+            lines = [f"mnemo: {self._mnemo}"]
+        lines += [f"private key: {self.private_key()}",
+                  f"public key: {self.public_key()}",
+                  f"address: {self.address()}"]
+        return "\n".join(lines)
